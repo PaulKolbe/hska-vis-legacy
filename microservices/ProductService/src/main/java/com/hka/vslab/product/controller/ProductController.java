@@ -62,11 +62,6 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
-	@GetMapping("/hello")
-	public String getHello() {
-		return "world";
-	}
-
 	@GetMapping("/products")
 	public List<Product> getProducts(@RequestParam(required = false) String categoryId) {
 		if (categoryId != null) {
