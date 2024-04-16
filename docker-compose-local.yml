@@ -37,6 +37,8 @@ services:
        - "8889:8080" # Increment on 8888
      environment:
        - SPRING_DATASOURCE_URL=jdbc:mysql://web-shop-db-image:3306/categorydb
+       - SPRING_DATASOURCE_USERNAME=webshopuser
+       - SPRING_DATASOURCE_PASSWORD=240b2c6d58ff2ce2f508b49f
      networks:
        local_dev_net:
            aliases:
@@ -50,6 +52,8 @@ services:
        - "8890:8080"
      environment:
        - SPRING_DATASOURCE_URL=jdbc:mysql://web-shop-db-image:3306/productdb
+       - SPRING_DATASOURCE_USERNAME=webshopuser
+       - SPRING_DATASOURCE_PASSWORD=240b2c6d58ff2ce2f508b49f
      networks:
        local_dev_net:
          aliases:
