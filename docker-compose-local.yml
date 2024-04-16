@@ -39,10 +39,12 @@ services:
        - SPRING_DATASOURCE_URL=jdbc:mysql://web-shop-db-image:3306/categorydb
        - SPRING_DATASOURCE_USERNAME=webshopuser
        - SPRING_DATASOURCE_PASSWORD=240b2c6d58ff2ce2f508b49f
+       - CATEGORY_RIBBON_LISTOFSERVERS=categorymicroservice:8080/
+       - PRODUCT_RIBBON_LISTOFSERVERS=productmicroservice:8080/
      networks:
        local_dev_net:
            aliases:
-               - category
+               - categorymicroservice
 
   web-shop-product:
      build:
@@ -54,10 +56,12 @@ services:
        - SPRING_DATASOURCE_URL=jdbc:mysql://web-shop-db-image:3306/productdb
        - SPRING_DATASOURCE_USERNAME=webshopuser
        - SPRING_DATASOURCE_PASSWORD=240b2c6d58ff2ce2f508b49f
+       - CATEGORY_RIBBON_LISTOFSERVERS=categorymicroservice:8080/
+       - PRODUCT_RIBBON_LISTOFSERVERS=productmicroservice:8080/
      networks:
        local_dev_net:
          aliases:
-           - product
+           - productmicroservice
 
 networks:
   local_dev_net:
