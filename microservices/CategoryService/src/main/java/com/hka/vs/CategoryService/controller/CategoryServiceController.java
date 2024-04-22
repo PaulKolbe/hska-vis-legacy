@@ -45,23 +45,23 @@ public class CategoryServiceController {
     }
 
     @DeleteMapping("/categories")
-    public void delCategory(@RequestBody Category category) throws RuntimeException {
+    public void deleteCategory(@RequestBody Category category) throws RuntimeException {
         List<Product> products = productService.getProductsByCategory(category.getId());
 
         if (!products.isEmpty()) {
             throw new RuntimeException("Category is not empty");
         }
-        categoryService.delCategory(category);
+        categoryService.deleteCategory(category);
     }
 
     @DeleteMapping("/categories/{id}")
-    public void delCategoryById(@PathVariable(required = true, name = "id") int id) throws RuntimeException {
+    public void deleteCategoryById(@PathVariable(required = true, name = "id") int id) throws RuntimeException {
         List<Product> products = productService.getProductsByCategory(id);
 
         if (!products.isEmpty()) {
             throw new RuntimeException("Category is not empty");
         }
-        categoryService.delCategory(id);
+        categoryService.deleteCategory(id);
     }
 
 }

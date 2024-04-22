@@ -81,15 +81,15 @@ public class ProductController {
 	}
 
 	@PostMapping("/products")
-	public ResponseEntity<Object> addProduct(@RequestBody NewProductData newProduct) throws RuntimeException {
-		Category category = categoryService.getCategory(newProduct.getCategoryId());
+	public ResponseEntity<Object> addProduct(@RequestBody NewProductData productToCreate) throws RuntimeException {
+		Category category = categoryService.getCategory(productToCreate.getCategoryId());
 
 		if (category == null) {
 			throw new RuntimeException("Category not found");
 		}
 
-		Product product = new Product(newProduct.getName(), newProduct.getPrice(), newProduct.getCategoryId(),
-				newProduct.getDetails());
+		Product product = new Product(productToCreate.getName(), productToCreate.getPrice(), productToCreate.getCategoryId(),
+				productToCreate.getDetails());
 		productService.addProduct(product);
 		int productId = product.getId();
 		return new ResponseEntity<>(productService.getProduct(productId), HttpStatus.CREATED);
@@ -99,7 +99,8 @@ public class ProductController {
 	public List<Product> getProductsForSearchValues(
 			@RequestParam(name = "searchString", required = false) String searchValue,
 			@RequestParam(name = "minPrice", required = false) Double searchMinPrice,
-			@RequestParam(name = "maxPrice", required = false) Double searchMaxPrice) {
+			@RequestParam(name = "maxPrice", required = false) Double searchMaxPrice
+	) {
 		return productService.findProductsBySearch(searchValue, searchMinPrice, searchMaxPrice);
 	}
 
@@ -111,6 +112,6 @@ public class ProductController {
 
 	@DeleteMapping("/product/{id}")
 	public void deleteProductById(@PathVariable("id") int id) {
-		productService.delProduct(id);
+		productService.deleteProduct(id);
 	}
 }

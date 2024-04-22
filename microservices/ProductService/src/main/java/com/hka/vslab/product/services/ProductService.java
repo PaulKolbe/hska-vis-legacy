@@ -48,8 +48,7 @@ public class ProductService {
             else if (maxPrice == null)
                 return productRepository.findProductsByNameLikeAndPriceGreaterThanEqual(search, minPrice);
             else
-                return productRepository.findProductsByNameLikeAndPriceGreaterThanEqualAndPriceLessThanEqual(search,
-                        minPrice, maxPrice);
+                return productRepository.findProductsByNameLikeAndPriceGreaterThanEqualAndPriceLessThanEqual(search, minPrice, maxPrice);
         } catch (NoSuchElementException e) {
             return null;
         }
@@ -64,15 +63,15 @@ public class ProductService {
     }
 
     @Transactional
-    public void delProduct(Product product) {
+    public void deleteProduct(Product product) {
         productRepository.deleteByName(product.getName());
     }
 
-    public void delProduct(int id) {
+    public void deleteProduct(int id) {
         productRepository.deleteById(id);
     }
 
-    public int deleteAllByCategory(Category cat) {
-        return productRepository.deleteAllByCategoryId(cat);
+    public int deleteAllByCategory(Category category) {
+        return productRepository.deleteAllByCategoryId(category);
     }
 }

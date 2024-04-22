@@ -43,11 +43,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delCategory(Category category) {
+    public void deleteCategory(Category category) {
         categoryRepository.deleteById(category.getId());
     }
 
-    public void delCategory(int id) {
+    public void deleteCategory(int id) {
         categoryRepository.deleteById(id);
     }
 
