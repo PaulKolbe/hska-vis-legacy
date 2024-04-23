@@ -1,0 +1,288 @@
+apiVersion: v1
+stringData:
+  MYSQL_ROOT_PASSWORD: c8de110f37300a53a971749
+  MYSQL_USER: webshopuser
+  MYSQL_PASSWORD: dbPassword
+kind: Secret
+type: Opaque
+metadata:
+  name: mysql-pass
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+data:
+  MYSQL_USER: webshopuser
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - image: mysqlwebshop
+          name: mysql
+          imagePullPolicy: IfNotPresent
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key:
+                    MYSQL_ROOT_PASSWORD
+                    # Use secret in real usage
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: MYSQL_PASSWORD
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webshop
+spec:
+  ports:
+    - port: 8888
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    run: webshop
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: category
+  name: category
+spec:
+  ports:
+    - port: 8889
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    run: category
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: product
+  name: product
+spec:
+  ports:
+    - port: 8080
+  selector:
+    run: product
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: category
+  name: category
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: category
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: category
+    spec:
+      containers:
+        - image: category:latest
+          name: category
+          resources: {}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: MYSQL_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: MYSQL_PASSWORD
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://$(MYSQL_SERVICE_HOST):3306/categorydb
+            - name: PRODUCT_RIBBON_LISTOFSERVERS
+              value: $(PRODUCT_SERVICE_HOST):$(PRODUCT_SERVICE_PORT)/
+      initContainers:
+        - name: init-delay-category
+          image: busybox
+          command: ["sleep", "15"]
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: product
+  name: product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: product
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: product
+    spec:
+      containers:
+        - image: product:latest
+          name: product
+          resources: {}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: MYSQL_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: MYSQL_PASSWORD
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://$(MYSQL_SERVICE_HOST):3306/productdb
+            - name: CATEGORY_RIBBON_LISTOFSERVERS
+              value: $(CATEGORY_SERVICE_HOST):$(CATEGORY_SERVICE_PORT)/
+      initContainers:
+        - name: init-delay-product
+          image: busybox
+          command: ["sleep", "15"]
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: webshop
+  name: webshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: webshop
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: webshop
+    spec:
+      containers:
+        - image: webshop:latest
+          name: webshop
+          resources: {}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://$(MYSQL_SERVICE_HOST):3306/webshop
+            - name: PRODUCT_RIBBON_LISTOFSERVERS
+              value: $(PRODUCT_SERVICE_HOST):$(PRODUCT_SERVICE_PORT)/
+            - name: CATEGORY_RIBBON_LISTOFSERVERS
+              value: $(CATEGORY_SERVICE_HOST):$(CATEGORY_SERVICE_PORT)/
+      initContainers:
+        - name: init-delay-webshop
+          image: busybox
+          command: ["sleep", "15"]
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: apache
+  name: apache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: apache
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: apache
+    spec:
+      containers:
+        - image: apache:latest
+          name: apache
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: apache
+  name: apache
+spec:
+  ports:
+    - port: 8001
+      protocol: TCP
+      targetPort: 80
+  selector:
+    run: apache
+  type: LoadBalancer
+status:
+  loadBalancer: {}
