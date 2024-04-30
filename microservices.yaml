@@ -109,7 +109,7 @@ spec:
     - port: 8080
   selector:
     run: product
-  type: ClusterIP
+  type: LoadBalancer
 status:
   loadBalancer: {}
 ---
