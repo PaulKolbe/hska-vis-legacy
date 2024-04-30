@@ -42,7 +42,7 @@ spec:
       containers:
         - image: mysqlwebshop
           name: mysql
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           env:
             # Use secret in real usage
             - name: MYSQL_ROOT_PASSWORD
@@ -136,7 +136,7 @@ spec:
         - image: category:latest
           name: category
           resources: {}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           env:
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
@@ -182,7 +182,7 @@ spec:
         - image: product:latest
           name: product
           resources: {}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           env:
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
@@ -227,7 +227,7 @@ spec:
         - image: webshop:latest
           name: webshop
           resources: {}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           env:
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://$(MYSQL_SERVICE_HOST):3306/webshop
