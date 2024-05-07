@@ -16,6 +16,9 @@ import com.hka.vs.CategoryService.service.CategoryService;
 import com.hka.vs.CategoryService.model.Product;
 import com.hka.vs.CategoryService.service.ProductService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 @RestController
 public class CategoryServiceController {
 
@@ -45,20 +48,21 @@ public class CategoryServiceController {
     }
 
     @DeleteMapping("/categories")
-    public void deleteCategory(@RequestBody Category category) throws RuntimeException {
-        List<Product> products = productService.getProductsByCategory(category.getId());
-
-        if (!products.isEmpty()) {
-            throw new RuntimeException("Category is not empty");
-        }
-        categoryService.deleteCategory(category);
-    }
-
-    @DeleteMapping("/categories/{id}")
-    public void deleteCategoryById(@PathVariable(required = true, name = "id") int id) throws RuntimeException {
+    public ResponseEntity<Object> deleteCategory(@RequestBody Category category) {
+        int id = category.getId();
         boolean isDeleted = productService.deleteProductsByCategoryId(id);
         if (isDeleted) {
             categoryService.deleteCategory(id);
         }
+        return new ResponseEntity<>("The category was deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Object> deleteCategoryById(@PathVariable(required = true, name = "id") int id) {
+        boolean isDeleted = productService.deleteProductsByCategoryId((int)id);
+        if (isDeleted) {
+            categoryService.deleteCategory((int)id);
+        }
+        return new ResponseEntity<>("The category was deleted", HttpStatus.OK);
     }
 }

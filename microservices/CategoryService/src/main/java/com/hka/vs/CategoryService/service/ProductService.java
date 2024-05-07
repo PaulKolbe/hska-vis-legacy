@@ -14,6 +14,6 @@ public interface ProductService {
     @RequestMapping(method = RequestMethod.GET, value = "/products")
     List<Product> getProductsByCategory(@RequestParam("categoryId") int id);
 
-    @DeleteMapping(method = RequestMethod.DELETE, value = "/products")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/products")
     boolean deleteProductsByCategoryId(@RequestParam("categoryId") int categoryId);
 }
