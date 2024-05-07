@@ -56,12 +56,9 @@ public class CategoryServiceController {
 
     @DeleteMapping("/categories/{id}")
     public void deleteCategoryById(@PathVariable(required = true, name = "id") int id) throws RuntimeException {
-        List<Product> products = productService.getProductsByCategory(id);
-
-        if (!products.isEmpty()) {
-            throw new RuntimeException("Category is not empty");
+        boolean isDeleted = productService.deleteProductsByCategoryId(id);
+        if (isDeleted) {
+            categoryService.deleteCategory(id);
         }
-        categoryService.deleteCategory(id);
     }
-
 }
