@@ -81,11 +81,11 @@ public class ProductController {
 	}
 
 	@PostMapping("/products")
-	public ResponseEntity<Object> addProduct(@RequestBody NewProductData productToCreate) throws RuntimeException {
+	public ResponseEntity<Object> addProduct(@RequestBody NewProductData productToCreate) {
 		Category category = categoryService.getCategory(productToCreate.getCategoryId());
 
 		if (category == null) {
-			throw new RuntimeException("Category not found");
+			return new ResponseEntity<>("The category you wanted to use does not exist!", HttpStatus.BAD_REQUEST);
 		}
 
 		Product product = new Product(productToCreate.getName(), productToCreate.getPrice(), productToCreate.getCategoryId(),
