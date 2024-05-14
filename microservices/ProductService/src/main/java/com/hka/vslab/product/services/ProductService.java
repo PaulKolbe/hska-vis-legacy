@@ -71,7 +71,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public int deleteAllByCategory(Category category) {
-        return productRepository.deleteAllByCategoryId(category);
+    public int deleteAllByCategory(int categoryId) {
+        return productRepository.deleteAllByCategoryId(categoryId);
     }
 }

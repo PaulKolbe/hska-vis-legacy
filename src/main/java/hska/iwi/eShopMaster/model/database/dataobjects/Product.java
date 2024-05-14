@@ -29,7 +29,7 @@ public class Product implements java.io.Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	private Category category;
+	private int categoryId;
 
 	@Column(name = "details")
 	private String details;

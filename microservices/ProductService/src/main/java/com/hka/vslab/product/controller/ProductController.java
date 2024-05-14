@@ -106,8 +106,8 @@ public class ProductController {
 
 	@DeleteMapping("/products")
 	public boolean deleteProductsByCategoryId(@RequestParam("categoryId") int categoryId) {
-		Category category = categoryService.getCategory(categoryId);
-		return productService.deleteAllByCategory(category) > 0;
+//		Category category = categoryService.getCategory(categoryId);
+		return productService.deleteAllByCategory(categoryId) > 0;
 	}
 
 	@DeleteMapping("/product/{id}")
