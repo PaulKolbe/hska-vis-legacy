@@ -246,35 +246,45 @@ status: {}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: reverse-proxy
+  creationTimestamp: null
+  labels:
+    run: apache
+  name: apache
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: reverse-proxy
+      run: apache
+  strategy: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: reverse-proxy
+        run: apache
     spec:
       containers:
-        - name: reverse-proxy
-          image: nginx-proxy
+        - image: apache:latest
+          name: apache
           imagePullPolicy: Never
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "200m"
           ports:
-            - containerPort: 5000
+            - containerPort: 80
+          resources: {}
+status: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: reverse-proxy-svc
+  creationTimestamp: null
+  labels:
+    run: apache
+  name: apache
 spec:
-  selector:
-    app: reverse-proxy
-  type: ClusterIP
   ports:
-    - port: 5000
-      targetPort: 5000
+    - port: 8001
+      protocol: TCP
+      targetPort: 80
+  selector:
+    run: apache
+  type: LoadBalancer
+status:
+  loadBalancer: {}
