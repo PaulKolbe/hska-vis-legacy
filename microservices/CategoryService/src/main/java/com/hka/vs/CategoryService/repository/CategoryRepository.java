@@ -10,4 +10,6 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     Category findByName(String name);
 
     void deleteByName(String name);
+
+    void deleteById(int id);
 }

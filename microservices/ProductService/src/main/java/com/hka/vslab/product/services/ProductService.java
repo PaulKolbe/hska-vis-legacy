@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+//@Transactional
 public class ProductService {
 
     @Autowired
@@ -62,15 +63,17 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    @Transactional
+//    @Transactional
     public void deleteProduct(Product product) {
         productRepository.deleteByName(product.getName());
     }
 
+//    @Transactional
     public void deleteProduct(int id) {
         productRepository.deleteById(id);
     }
 
+//    @Transactional
     public int deleteAllByCategory(int categoryId) {
         return productRepository.deleteAllByCategoryId(categoryId);
     }

@@ -43,8 +43,9 @@ public class CategoryServiceController {
     }
 
     @PostMapping("/categories")
-    public void addCategory(@RequestBody Category category) {
+    public ResponseEntity<Object> addCategory(@RequestBody Category category) {
         categoryService.addCategory(category);
+        return new ResponseEntity<>("The category was created", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/categories")
@@ -59,10 +60,11 @@ public class CategoryServiceController {
 
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<Object> deleteCategoryById(@PathVariable(required = true, name = "id") int id) {
-        boolean isDeleted = productService.deleteProductsByCategoryId((int)id);
-        if (isDeleted) {
-            categoryService.deleteCategory((int)id);
-        }
+        categoryService.deleteCategory((int) id);
+//        boolean isDeleted = productService.deleteProductsByCategoryId((int)id);
+//        if (isDeleted) {
+//            categoryService.deleteCategory((int)id);
+//        }
         return new ResponseEntity<>("The category was deleted", HttpStatus.OK);
     }
 }

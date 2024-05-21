@@ -10,6 +10,8 @@ import com.hka.vslab.product.services.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 import javax.management.RuntimeErrorException;
@@ -55,6 +57,7 @@ class NewProductData {
 }
 
 @RestController
+@Transactional
 public class ProductController {
 
 	@Autowired
@@ -103,6 +106,7 @@ public class ProductController {
 	) {
 		return productService.findProductsBySearch(searchValue, searchMinPrice, searchMaxPrice);
 	}
+
 
 	@DeleteMapping("/products")
 	public boolean deleteProductsByCategoryId(@RequestParam("categoryId") int categoryId) {
