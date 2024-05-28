@@ -16,6 +16,7 @@ the masters course 'Distributed Information Systems' at the University of Applie
 ## <a name="prerequisites"></a>Prerequisites
 - [docker](https://docker.com)
 - with `docker-compose`
+- [kubernetes](https://kubernetes.io/de/)
 
 ## <a name="usage"></a>Usage
 You can run the images from `docker hub` which is preferred or built it on your own.
