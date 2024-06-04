@@ -2,6 +2,7 @@ package com.hka.vs.CategoryService.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.hka.vs.CategoryService.model.Category;
 import com.hka.vs.CategoryService.service.CategoryService;
@@ -24,6 +28,10 @@ public class CategoryServiceController {
     Random random = new Random();
     private int podId = random.nextInt(100);
 
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add("Baeldung-Example-Header",
+            "Value-ResponseEntityBuilderWithHttpHeaders");
+
     @Autowired
     private ProductService productService;
     @Autowired
@@ -31,8 +39,9 @@ public class CategoryServiceController {
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getCategories() {
+
         return ResponseEntity.ok()
-                .headers(podId)
+                .headers(responseHeaders)
                 .body(categoryService.getAllCategories());
     }
 
