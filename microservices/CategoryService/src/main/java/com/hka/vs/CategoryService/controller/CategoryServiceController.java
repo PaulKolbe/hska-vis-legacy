@@ -16,8 +16,13 @@ import com.hka.vs.CategoryService.service.CategoryService;
 import com.hka.vs.CategoryService.model.Product;
 import com.hka.vs.CategoryService.service.ProductService;
 
+import java.util.Random;
+
 @RestController
 public class CategoryServiceController {
+
+    Random random = new Random();
+    private int podId = random.nextInt(100);
 
     @Autowired
     private ProductService productService;
@@ -25,8 +30,10 @@ public class CategoryServiceController {
     private CategoryService categoryService;
 
     @GetMapping("/categories")
-    public List<Category> getCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<List<Category>> getCategories() {
+        return ResponseEntity.ok()
+                .headers(podId)
+                .body(categoryService.getAllCategories());
     }
 
     @GetMapping("/categories/{id}")
