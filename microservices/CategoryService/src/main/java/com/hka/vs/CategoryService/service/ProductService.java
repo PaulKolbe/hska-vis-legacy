@@ -13,9 +13,4 @@ import java.util.List;
 public interface ProductService {
     @RequestMapping(method = RequestMethod.GET, value = "/products")
     List<Product> getProductsByCategory(@RequestParam("categoryId") int id);
-
-    @RequestMapping(method = RequestMethod.DELETE, value = "/product/{id}")
-    deleteProductById(@RequestParam("id") int id);
-
 }
-
