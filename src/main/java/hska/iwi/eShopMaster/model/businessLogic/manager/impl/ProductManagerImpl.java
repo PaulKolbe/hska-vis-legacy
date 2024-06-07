@@ -1,65 +1,74 @@
 package hska.iwi.eShopMaster.model.businessLogic.manager.impl;
 
-import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
+import hska.iwi.eShopMaster.client.ProductClient;
 import hska.iwi.eShopMaster.model.businessLogic.manager.ProductManager;
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.ProductDAO;
-import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 import hska.iwi.eShopMaster.model.database.dataobjects.Product;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductManagerImpl implements ProductManager {
-	private ProductDAO helper;
-	
+
+	private final ProductClient productClient = Feign.builder()
+			.encoder(new GsonEncoder())
+			.decoder(new GsonDecoder())
+			.target(ProductClient.class, "http://" + System.getenv("PRODUCT_SERVICE_HOST") + ":"
+					+ System.getenv("PRODUCT_SERVICE_PORT") + "/products");
+
 	public ProductManagerImpl() {
-		helper = new ProductDAO();
 	}
 
 	public List<Product> getProducts() {
-		return helper.getObjectList();
+		return productClient.getProducts();
 	}
-	
+
 	public List<Product> getProductsForSearchValues(String searchDescription,
-			Double searchMinPrice, Double searchMaxPrice) {	
-		return new ProductDAO().getProductListByCriteria(searchDescription, searchMinPrice, searchMaxPrice);
+													Double searchMinPrice, Double searchMaxPrice) {
+
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		if (searchDescription != null) {
+			queryMap.put("searchString", searchDescription);
+		}
+
+		if (searchMinPrice != null) {
+			queryMap.put("minPrice", searchMinPrice);
+		}
+
+		if (searchMaxPrice != null) {
+			queryMap.put("maxPrice", searchMaxPrice);
+		}
+
+		return productClient.search(queryMap);
 	}
 
 	public Product getProductById(int id) {
-		return helper.getObjectById(id);
+		return productClient.getProduct((long) id);
 	}
 
 	public Product getProductByName(String name) {
-		return helper.getObjectByName(name);
+		return null;
 	}
-	
+
 	public int addProduct(String name, double price, int categoryId, String details) {
-		int productId = -1;
-		
-		CategoryManager categoryManager = new CategoryManagerImpl();
-		Category category = categoryManager.getCategory(categoryId);
-		
-		if(category != null){
-			Product product;
-			if(details == null){
-				product = new Product(name, price, category);	
-			} else{
-				product = new Product(name, price, category, details);
-			}
-			
-			helper.saveObject(product);
-			productId = product.getId();
-		}
-			 
-		return productId;
+		Map<String, Object> requestBody = new HashMap<String, Object>();
+		requestBody.put("name", name);
+		requestBody.put("price", price);
+		requestBody.put("categoryId", categoryId);
+		requestBody.put("details", details);
+		Product product = productClient.createProduct(requestBody);
+
+		return product.getId();
 	}
-	
 
 	public void deleteProductById(int id) {
-		helper.deleteById(id);
+		productClient.deleteProduct((long) id);
 	}
 
 	public boolean deleteProductsByCategoryId(int categoryId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

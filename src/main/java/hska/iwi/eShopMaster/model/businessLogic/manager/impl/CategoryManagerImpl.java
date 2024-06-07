@@ -1,45 +1,51 @@
 package hska.iwi.eShopMaster.model.businessLogic.manager.impl;
 
 
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
+import hska.iwi.eShopMaster.client.CategoryClient;
 import hska.iwi.eShopMaster.model.businessLogic.manager.CategoryManager;
-import hska.iwi.eShopMaster.model.database.dataAccessObjects.CategoryDAO;
 import hska.iwi.eShopMaster.model.database.dataobjects.Category;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class CategoryManagerImpl implements CategoryManager{
-	private CategoryDAO helper;
-	
+public class CategoryManagerImpl implements CategoryManager {
+
+	private final CategoryClient categoryClient = Feign.builder()
+			.encoder(new GsonEncoder())
+			.decoder(new GsonDecoder())
+			.target(CategoryClient.class, "http://" + System.getenv("CATEGORY_SERVICE_HOST") + ":"
+					+ System.getenv("CATEGORY_SERVICE_PORT") + "/categories");
+
 	public CategoryManagerImpl() {
-		helper = new CategoryDAO();
 	}
 
 	public List<Category> getCategories() {
-		return helper.getObjectList();
+		return categoryClient.getCategories();
 	}
 
 	public Category getCategory(int id) {
-		return helper.getObjectById(id);
+		return categoryClient.getCategory((long) id);
 	}
 
 	public Category getCategoryByName(String name) {
-		return helper.getObjectByName(name);
+		return null;
 	}
 
 	public void addCategory(String name) {
-		Category cat = new Category(name);
-		helper.saveObject(cat);
-
+		Map<String, Object> requestBody = new HashMap<String, Object>();
+		requestBody.put("name", name);
+		categoryClient.createCategory(requestBody);
 	}
 
 	public void delCategory(Category cat) {
-	
-// 		Products are also deleted because of relation in Category.java 
-		helper.deleteById(cat.getId());
+		categoryClient.deleteCategory((long) cat.getId());
 	}
 
 	public void delCategoryById(int id) {
-		
-		helper.deleteById(id);
+		categoryClient.deleteCategory((long) id);
 	}
 }
