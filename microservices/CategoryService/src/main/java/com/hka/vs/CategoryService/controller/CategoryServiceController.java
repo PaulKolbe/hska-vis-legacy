@@ -20,17 +20,8 @@ import com.hka.vs.CategoryService.service.CategoryService;
 import com.hka.vs.CategoryService.model.Product;
 import com.hka.vs.CategoryService.service.ProductService;
 
-import java.util.Random;
-
 @RestController
 public class CategoryServiceController {
-
-    Random random = new Random();
-    private int podId = random.nextInt(100);
-
-    HttpHeaders responseHeaders = new HttpHeaders();
-    responseHeaders.add("Baeldung-Example-Header",
-            "Value-ResponseEntityBuilderWithHttpHeaders");
 
     @Autowired
     private ProductService productService;
@@ -38,11 +29,8 @@ public class CategoryServiceController {
     private CategoryService categoryService;
 
     @GetMapping("/categories")
-    public ResponseEntity<List<Category>> getCategories() {
-
-        return ResponseEntity.ok()
-                .headers(responseHeaders)
-                .body(categoryService.getAllCategories());
+    public List<Category> getCategories() {
+        return categoryService.getAllCategories();
     }
 
     @GetMapping("/categories/{id}")
