@@ -29,22 +29,27 @@ public class Product implements java.io.Serializable {
 	// @JoinColumn(name = "category_id")
 	private int categoryId;
 
+	@Column(name = "category_name")
+	private String categoryName;
+
 	@Column(name = "details")
 	private String details;
 
 	public Product() {
 	}
 
-	public Product(String name, double price, int categoryId) {
+	public Product(String name, double price, int categoryId, String categoryName) {
 		this.name = name;
 		this.price = price;
 		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 	}
 
-	public Product(String name, double price, int categoryId, String details) {
+	public Product(String name, double price, int categoryId, String categoryName, String details) {
 		this.name = name;
 		this.price = price;
 		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 		this.details = details;
 	}
 
@@ -78,6 +83,14 @@ public class Product implements java.io.Serializable {
 
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public String getCategoryName() {
+		return this.categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public String getDetails() {

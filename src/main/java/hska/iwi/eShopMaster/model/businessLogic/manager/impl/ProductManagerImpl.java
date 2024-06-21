@@ -53,11 +53,12 @@ public class ProductManagerImpl implements ProductManager {
 		return null;
 	}
 
-	public int addProduct(String name, double price, int categoryId, String details) {
+	public int addProduct(String name, double price, int categoryId, String categoryName, String details) {
 		Map<String, Object> requestBody = new HashMap<String, Object>();
 		requestBody.put("name", name);
 		requestBody.put("price", price);
 		requestBody.put("categoryId", categoryId);
+		requestBody.put("categoryName", categoryName);
 		requestBody.put("details", details);
 		Product product = productClient.createProduct(requestBody);
 

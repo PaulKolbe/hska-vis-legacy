@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS product (
 	name VARCHAR(255),
 	price DOUBLE,
 	category_id INT,
+	category_name VARCHAR(255),
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
@@ -47,3 +48,11 @@ CREATE TABLE IF NOT EXISTS role (
 	type VARCHAR(255),
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB;
+
+insert into `role` (`level1`, `type`)
+values (0, 'admin');
+insert into `role` (`level1`, `type`)
+values (1, 'user');
+
+insert into `customer` (`name`, `lastname`, `password`, `username`, `role`)
+values ('admin', 'admin', 'admin', 'admin', 1);

@@ -243,10 +243,6 @@ spec:
                   key: MYSQL_PASSWORD
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql:3306/webshop
-            - name: CATEGORY_RIBBON_LISTOFSERVERS
-              value: $(CATEGORY_SERVICE_HOST):$(CATEGORY_SERVICE_PORT)/
-            - name: PRODUCT_RIBBON_LISTOFSERVERS
-              value: $(PRODUCT_SERVICE_HOST):$(PRODUCT_SERVICE_PORT)/
       initContainers:
         - name: init-delay-webshop
           image: busybox

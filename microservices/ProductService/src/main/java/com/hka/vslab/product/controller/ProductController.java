@@ -88,7 +88,7 @@ public class ProductController {
 			throw new RuntimeException("Category not found");
 		}
 
-		Product product = new Product(productToCreate.getName(), productToCreate.getPrice(), productToCreate.getCategoryId(),
+		Product product = new Product(productToCreate.getName(), productToCreate.getPrice(), category.getId(), category.getName(),
 				productToCreate.getDetails());
 		productService.addProduct(product);
 		int productId = product.getId();
