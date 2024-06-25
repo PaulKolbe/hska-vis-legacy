@@ -110,7 +110,7 @@ public class ProductController {
 		return productService.deleteAllByCategory(category) > 0;
 	}
 
-	@DeleteMapping("/product/{id}")
+	@DeleteMapping("/products/{id}")
 	public void deleteProductById(@PathVariable("id") int id) {
 		productService.deleteProduct(id);
 	}
